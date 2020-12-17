@@ -12,27 +12,27 @@ client = discord.Client()
 
 sad_words = ['sad','ds','depressed','unhappy','angry','miserable','depressing']
 
-starter_encoragements =['Cheer up!','Hang in there.','Just keep going','Eat well']
+starter_encouragements =['Cheer up!','Hang in there.','Just keep going','Eat well']
 
 if 'responding' not in db.keys():
   db['responding'] = True
 
 
-def update_encoragements(encoraging_message):
-  if "encoragements" in db.keys():
-    encoragements = db["encoragements"]
-    encoragements.append(encoraging_message)
-    db["encoragements"]=encoragements
+def update_encouragements(encoraging_message):
+  if "encouragements" in db.keys():
+    encouragements = db["encouragements"]
+    encouragements.append(encoraging_message)
+    db["encouragements"]=encouragements
 
   else:
-    db['encoragements'] = [encoraging_message]
+    db['encouragements'] = [encoraging_message]
 
 
 def delete_encoragement(index):
-  encoragements = db["encoragements"]
-  if len(encoragements) > index:
-    del encoragements[index]
-    db["encoragements"] = encoragements
+  encouragements = db["encouragements"]
+  if len(encouragements) > index:
+    del encouragements[index]
+    db["encouragements"] = encouragements
 
 
 def get_quote():
@@ -61,32 +61,32 @@ async def on_message(message):
 
     if db['responding']:
 
-      options = starter_encoragements
+      options = starter_encouragements
 
-      if 'encoragements' in db.keys():
-        options+= db['encoragements']
+      if 'encouragements' in db.keys():
+        options = options + db['encouragements']
       
       if any(word in msg for word in sad_words):
-        await message.channel.send(random.choice(starter_encoragements))
+        await message.channel.send(random.choice(options))
 
     if msg.startswith('$new'):
       encoraging_message = msg.split('$new',1)[1]
-      update_encoragements(encoraging_message)
+      update_encouragements(encoraging_message)
       await message.channel.send("Added new encoraging message.")
 
     if msg.startswith('$del'):
-      encoragements =[]
-      if 'encoragements' in db.keys():
+      encouragements =[]
+      if 'encouragements' in db.keys():
         index= int(msg.split('$del',1)[1])
         delete_encoragement(index)
-        encoragements=db['encoragements']
-      await message.channel.send(encoragements)
+        encouragements=db['encouragements']
+      await message.channel.send(encouragements)
 
     if msg.startswith('$list'):
-      encoragements =[]
-      if 'encoragements' in db.keys():
-        db["encoragements"] = encoragements
-      await message.channel.send(encoragements)
+      encouragements =[]
+      if 'encouragements' in db.keys():
+        db["encouragements"] = encouragements
+      await message.channel.send(encouragements)
 
     if msg.startswith('$responding'):
       value = msg.split('$responding ',1)[1]
